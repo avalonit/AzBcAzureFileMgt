@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -7,19 +6,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.Text;
+using System;
 
 namespace com.businesscentral
 {
-    public class AzureGenerateKey
+    public class GetGetSharedKeyLite
     {
         private readonly IAzureStorage _azurestorage;
 
-        public AzureGenerateKey(IAzureStorage azurestorage)
+        public GetGetSharedKeyLite(IAzureStorage azurestorage)
         {
             _azurestorage = azurestorage;
         }
 
-        [FunctionName("AzureGenerateKey")]
+        [FunctionName("GetGetSharedKeyLite")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]
             HttpRequest req,
@@ -38,8 +38,11 @@ namespace com.businesscentral
             #endregion
 
             #region GetSharedKeyLite
-            StringBuilder sb = new StringBuilder();
-            sb.Append(_azurestorage.GetSharedKeyLite(config, "/app365azurefiles/to-increase/pippo?comp=list"));
+            var sb = new StringBuilder();
+            //eg: /app365azurefiles/to-increase/pippo?comp=list
+            var urlForMacEvaluation = String.Format("/{0}/{1}/{2}?comp=list", config.accountName, config.shareName, config.workingFolder);
+            var contentUrl = "text/plain";
+            sb.Append(_azurestorage.GetSharedKeyLite(config, urlForMacEvaluation, contentUrl));
 
             return new OkObjectResult(sb.ToString());
             #endregion

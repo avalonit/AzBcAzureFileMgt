@@ -38,8 +38,10 @@ namespace com.businesscentral
             #endregion
 
             #region GetSharedKeyLite
-            StringBuilder sb = new StringBuilder();
-            sb.Append(await _azurestorage.GetFolderListAsync(config, "https://app365azurefiles.file.core.windows.net/to-increase/pippo?&comp=list"));
+            var sb = new StringBuilder();
+            var publicUrl = String.Format("{0}/{1}?restype=directory&comp=list", config.azurePublicUrl, config.workingFolder);
+            var urlForMacEvaluation = String.Format("/{0}/{1}/{2}?comp=list", config.accountName, config.shareName, config.workingFolder);
+            sb.Append(await _azurestorage.GetFolderListAsync(config, publicUrl, urlForMacEvaluation));
 
             return new OkObjectResult(sb.ToString());
             #endregion

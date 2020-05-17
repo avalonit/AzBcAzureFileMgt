@@ -55,35 +55,38 @@ namespace com.businesscentral
             return stream;
         }
 
-        public async Task<string> GetFolderListAsync(ConnectorConfig config, string apiEndPoint)
+        public async Task<string> GetFolderListAsync(ConnectorConfig config, string publicUrl, string macEvaluatedUrl)
         {
             var returnValue = string.Empty;
             var requestDateString = DateTime.UtcNow.ToString("R", CultureInfo.InvariantCulture);
 
             using (var httpClient = new HttpClient())
             {
-                httpClient.DefaultRequestHeaders.Clear();
-                httpClient.DefaultRequestHeaders.Add("Content-Type", "text/plain");
-                httpClient.DefaultRequestHeaders.Add("x-ms-version", "2017-11-09");
-                httpClient.DefaultRequestHeaders.Add("x-ms-date", "2017-11-09");
-                var responseMessage = await httpClient.GetAsync(apiEndPoint);
-                if (responseMessage.IsSuccessStatusCode)
-                    returnValue = await responseMessage.Content.ReadAsStringAsync();
+                using (var request = new HttpRequestMessage(HttpMethod.Get, publicUrl))
+                {
+                    request.Headers.Clear();
+                    request.Headers.TryAddWithoutValidation("x-ms-version", "2017-11-09");
+                    request.Headers.TryAddWithoutValidation("x-ms-date", requestDateString);
+                    var authorizationSharedKey = GetSharedKey(config.accountName, config.accountKey, request);
+                    request.Headers.TryAddWithoutValidation("Authorization", "SharedKey " + authorizationSharedKey);
+
+                    var responseMessage = await httpClient.SendAsync(request);
+                    if (responseMessage.IsSuccessStatusCode)
+                        returnValue = await responseMessage.Content.ReadAsStringAsync();
+
+                }
+                return returnValue;
             }
-            return returnValue;
         }
 
-        public string GetSharedKeyLite(ConnectorConfig config, string url)
+        public string GetSharedKeyLite(ConnectorConfig config, string url, string contentType)
         {
             HttpMethod method = HttpMethod.Get;
             var StorageAccountName = config.accountName;
             var StorageKey = config.accountKey;
-            //var requestDateString = DateTime.UtcNow.ToString("R", CultureInfo.InvariantCulture);
-            var requestDateString = "Sat, 16 May 2020 20:50:00 GMT";
+            var requestDateString = DateTime.UtcNow.ToString("R", CultureInfo.InvariantCulture);
             var contentLength = string.Empty;
-            var contentType = "text/plain";
 
-            //var canonicalizedStringToBuild = string.Format("{0}\n{1}", RequestDateString, $"/{StorageAccountName}/{requestUri.AbsolutePath.TrimStart('/')}");
             var canonicalizedStringToBuild = String.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}",
                         method.ToString(),
                         (method == HttpMethod.Get || method == HttpMethod.Head) ? String.Empty : contentLength,
@@ -100,23 +103,22 @@ namespace com.businesscentral
             }
 
             var sharedKeyLite = string.Format("SharedKeyLite " + $"{StorageAccountName}:" + signature);
-            return sharedKeyLite;
+            return sharedKeyLite + " " + requestDateString;
         }
 
-        public string GetSharedKey(
-            string storageAccountName, string storageAccountKey, DateTime now,
-            HttpRequestMessage httpRequestMessage, string ifMatch = "", string md5 = "")
+        public string GetSharedKey(string storageAccountName, string storageAccountKey, HttpRequestMessage httpRequestMessage)
         {
             // This is the raw representation of the message signature.
-            HttpMethod method = httpRequestMessage.Method;
-            String MessageSignature = String.Format("{0}\n\n\n{1}\n{5}\n\n\n\n{2}\n\n\n\n{3}{4}",
+            var canonicalizedHeaders = GetCanonicalizedHeaders(httpRequestMessage);
+            var canonicalizeResource = GetCanonicalizedResource(httpRequestMessage.RequestUri, storageAccountName);
+            var method = httpRequestMessage.Method;
+
+            var  MessageSignature = String.Format("{0}\n\n{1}\n\n\n\n\n\n\n\n\n\n{2}{3}",
                         method.ToString(),
-                        (method == HttpMethod.Get || method == HttpMethod.Head) ? String.Empty
-                          : httpRequestMessage.Content.Headers.ContentLength.ToString(),
-                        ifMatch,
-                        GetCanonicalizedHeaders(httpRequestMessage),
-                        GetCanonicalizedResource(httpRequestMessage.RequestUri, storageAccountName),
-                        md5);
+                        (method == HttpMethod.Get || method == HttpMethod.Head) ? String.Empty : httpRequestMessage.Content.Headers.ContentLength.ToString(),
+                        canonicalizedHeaders,
+                        canonicalizeResource
+                        );
 
             // Now turn it into a byte array.
             byte[] SignatureBytes = Encoding.UTF8.GetBytes(MessageSignature);

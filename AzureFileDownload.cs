@@ -36,6 +36,7 @@ namespace com.businesscentral
                 log.LogInformation("Mandatory parameter omitted.");
                 return new BadRequestResult();
             }
+            log.LogInformation($"Downloading file {fileName}");
 
             if (String.IsNullOrEmpty(contentType))
                 contentType = "application/binary";

@@ -36,6 +36,7 @@ namespace com.businesscentral
                 log.LogInformation("Mandatory parameter omitted.");
                 return new BadRequestResult();
             }
+            log.LogInformation($"Uploading file {fileName}");
             #endregion
 
             #region Load configuration

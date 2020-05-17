@@ -10,18 +10,18 @@ using System.Text;
 
 namespace com.businesscentral
 {
-    public class AzureGetFolderList
+    public class AzureFileGetFolderList
     {
         private readonly IAzureStorage _azurestorage;
 
-        public AzureGetFolderList(IAzureStorage azurestorage)
+        public AzureFileGetFolderList(IAzureStorage azurestorage)
         {
             _azurestorage = azurestorage;
         }
 
-        [FunctionName("AzureGetFolderList")]
+        [FunctionName("AzureFileGetFolderList")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]
             HttpRequest req,
             ILogger log,
             ExecutionContext context)

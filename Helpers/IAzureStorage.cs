@@ -8,7 +8,7 @@ namespace com.businesscentral
         Task UploadAsync(ConnectorConfig config, string fullFileName, MemoryStream stream);
         Task<MemoryStream> DownloadAsync(ConnectorConfig config, string fullFileName);
         string GetSharedKeyLiteGet(ConnectorConfig config, string url, string contentType);
-        string GetSharedKeyLitePut(ConnectorConfig config, string url, string contentType);
+        string GetSharedKeyLitePut(ConnectorConfig config, string url, string contentType, int contentLength);
         Task<string> GetFolderListAsync(ConnectorConfig config, string publicUrl, string macEvaluatedUrl);
         //string RestApiUpload(ConnectorConfig config);
 

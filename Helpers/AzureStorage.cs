@@ -124,10 +124,10 @@ namespace com.businesscentral
             byte[] SignatureBytes = Encoding.UTF8.GetBytes(MessageSignature);
 
             // Create the HMACSHA256 version of the storage key.
-            HMACSHA256 SHA256 = new HMACSHA256(Convert.FromBase64String(storageAccountKey));
+            var SHA256 = new HMACSHA256(Convert.FromBase64String(storageAccountKey));
 
             // Compute the hash of the SignatureBytes and convert it to a base64 string.
-            string signature = Convert.ToBase64String(SHA256.ComputeHash(SignatureBytes));
+            var signature = Convert.ToBase64String(SHA256.ComputeHash(SignatureBytes));
 
             // This is the actual header that will be added to the list of request headers.
             var sharedKey = storageAccountName + ":" + signature;

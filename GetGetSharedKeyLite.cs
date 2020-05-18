@@ -41,7 +41,7 @@ namespace com.businesscentral
             var sb = new StringBuilder();
             //eg: /app365azurefiles/to-increase/pippo?comp=list
             var urlForMacEvaluation = String.Format("/{0}/{1}/{2}?comp=list", config.accountName, config.shareName, config.workingFolder);
-            var contentUrl = "text/plain";
+            var contentUrl = string.Empty;
             sb.Append(_azurestorage.GetSharedKeyLite(config, urlForMacEvaluation, contentUrl));
 
             return new OkObjectResult(sb.ToString());

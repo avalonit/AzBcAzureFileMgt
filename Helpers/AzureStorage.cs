@@ -103,7 +103,7 @@ namespace com.businesscentral
             }
 
             var sharedKeyLite = string.Format("SharedKeyLite " + $"{StorageAccountName}:" + signature);
-            return sharedKeyLite + " " + requestDateString;
+            return sharedKeyLite + "\n" + requestDateString + "\n" + canonicalizedStringToBuild;
         }
 
         public string GetSharedKey(string storageAccountName, string storageAccountKey, HttpRequestMessage httpRequestMessage)

@@ -79,9 +79,17 @@ namespace com.businesscentral
             }
         }
 
-        public string GetSharedKeyLite(ConnectorConfig config, string url, string contentType)
+        public string GetSharedKeyLiteGet(ConnectorConfig config, string url, string contentType)
         {
-            HttpMethod method = HttpMethod.Get;
+            return GetSharedKeyLite(HttpMethod.Get, config, url, contentType);
+        }
+        public string GetSharedKeyLitePut(ConnectorConfig config, string url, string contentType)
+        {
+            return GetSharedKeyLite(HttpMethod.Put, config, url, contentType);
+        }
+
+        public string GetSharedKeyLite(HttpMethod method, ConnectorConfig config, string url, string contentType)
+        {
             var StorageAccountName = config.accountName;
             var StorageKey = config.accountKey;
             var requestDateString = DateTime.UtcNow.ToString("R", CultureInfo.InvariantCulture);
@@ -113,7 +121,7 @@ namespace com.businesscentral
             var canonicalizeResource = GetCanonicalizedResource(httpRequestMessage.RequestUri, storageAccountName);
             var method = httpRequestMessage.Method;
 
-            var  MessageSignature = String.Format("{0}\n\n{1}\n\n\n\n\n\n\n\n\n\n{2}{3}",
+            var MessageSignature = String.Format("{0}\n\n{1}\n\n\n\n\n\n\n\n\n\n{2}{3}",
                         method.ToString(),
                         (method == HttpMethod.Get || method == HttpMethod.Head) ? String.Empty : httpRequestMessage.Content.Headers.ContentLength.ToString(),
                         canonicalizedHeaders,

@@ -10,16 +10,16 @@ using System;
 
 namespace com.businesscentral
 {
-    public class GetGetSharedKeyLite
+    public class GetGetSharedKeyLiteGet
     {
         private readonly IAzureStorage _azurestorage;
 
-        public GetGetSharedKeyLite(IAzureStorage azurestorage)
+        public GetGetSharedKeyLiteGet(IAzureStorage azurestorage)
         {
             _azurestorage = azurestorage;
         }
 
-        [FunctionName("GetGetSharedKeyLite")]
+        [FunctionName("GetGetSharedKeyLiteGet")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]
             HttpRequest req,
@@ -42,7 +42,7 @@ namespace com.businesscentral
             //eg: /app365azurefiles/to-increase/pippo?comp=list
             var urlForMacEvaluation = String.Format("/{0}/{1}/{2}?comp=list", config.accountName, config.shareName, config.workingFolder);
             var contentUrl = string.Empty;
-            sb.Append(_azurestorage.GetSharedKeyLite(config, urlForMacEvaluation, contentUrl));
+            sb.Append(_azurestorage.GetSharedKeyLiteGet(config, urlForMacEvaluation, contentUrl));
 
             return new OkObjectResult(sb.ToString());
             #endregion

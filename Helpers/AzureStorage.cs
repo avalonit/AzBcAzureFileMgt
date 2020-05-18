@@ -81,14 +81,14 @@ namespace com.businesscentral
 
         public string GetSharedKeyLiteGet(ConnectorConfig config, string url, string contentType)
         {
-            return GetSharedKeyLite(HttpMethod.Get, config, url, contentType, 0);
+            return GetSharedKeyLite(HttpMethod.Get, config, url, contentType, 0, string.Empty);
         }
-        public string GetSharedKeyLitePut(ConnectorConfig config, string url, string contentType, int contentLength)
+        public string GetSharedKeyLitePut(ConnectorConfig config, string url, string contentType, int contentLength, string subType)
         {
-            return GetSharedKeyLite(HttpMethod.Put, config, url, contentType, contentLength);
+            return GetSharedKeyLite(HttpMethod.Put, config, url, contentType, contentLength, subType);
         }
 
-        public string GetSharedKeyLite(HttpMethod method, ConnectorConfig config, string url, string contentType, int contentLength)
+        public string GetSharedKeyLite(HttpMethod method, ConnectorConfig config, string url, string contentType, int contentLength, string subType)
         {
             var StorageAccountName = config.accountName;
             var StorageKey = config.accountKey;
@@ -105,16 +105,30 @@ namespace com.businesscentral
 
             if (method == HttpMethod.Put)
             {
-                canonicalizedStringToBuild = String.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}\n{7}\n{8}",
-                        method.ToString(),
-                        String.Empty,
-                        contentType,
-                        string.Empty,
-                        "x-ms-content-length:" + contentLength.ToString(),
-                        "x-ms-date:" + requestDateString,
-                        "x-ms-type:file",
-                        "x-ms-version:2017-11-09",
-                        url);
+                if (subType.Equals("init"))
+                    canonicalizedStringToBuild = String.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}\n{7}\n{8}",
+                            method.ToString(),
+                            String.Empty,
+                            contentType,
+                            string.Empty,
+                            "x-ms-content-length:" + contentLength.ToString(),
+                            "x-ms-date:" + requestDateString,
+                            "x-ms-type:file",
+                            "x-ms-version:2017-11-09",
+                            url);
+                else
+                    canonicalizedStringToBuild = String.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}\n{7}\n{8}\n{9}\n{10}",
+                            method.ToString(),
+                            String.Empty,
+                            contentType,
+                            string.Empty,
+                            "x-ms-content-length:" + contentLength.ToString(),
+                            "x-ms-date:" + requestDateString,
+                            "x-ms-range:bytes=0-554",
+                            "x-ms-type:file",
+                            "x-ms-version:2017-11-09",
+                            "x-ms-write:update",
+                            url);
             }
             var signature = string.Empty;
             using (var hmac = new HMACSHA256(Convert.FromBase64String(StorageKey)))

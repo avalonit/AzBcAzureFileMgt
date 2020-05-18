@@ -40,9 +40,11 @@ namespace com.businesscentral
             #region GetSharedKeyLite
             var sb = new StringBuilder();
             //eg: /app365azurefiles/to-increase/pippo?comp=list
-            var urlForMacEvaluation = String.Format("/{0}/{1}/{2}?comp=list", config.accountName, config.shareName, config.workingFolder);
+            var urlForMacEvaluationList = String.Format("/{0}/{1}/{2}?comp=list", config.accountName, config.shareName, config.workingFolder);
+            var urlForMacEvaluationGet = String.Format("/{0}/{1}/{2}/sample2.txt", config.accountName, config.shareName, config.workingFolder);
             var contentUrl = string.Empty;
-            sb.Append(_azurestorage.GetSharedKeyLiteGet(config, urlForMacEvaluation, contentUrl));
+            sb.AppendLine(_azurestorage.GetSharedKeyLiteGet(config, urlForMacEvaluationList, contentUrl));
+            sb.AppendLine(_azurestorage.GetSharedKeyLiteGet(config, urlForMacEvaluationGet, contentUrl));
 
             return new OkObjectResult(sb.ToString());
             #endregion

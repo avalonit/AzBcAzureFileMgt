@@ -39,7 +39,6 @@ namespace com.businesscentral
 
             #region GetSharedKeyLite
             var sb = new StringBuilder();
-            //eg: /app365azurefiles/to-increase/pippo?comp=list
             var urlForMacEvaluationRange = String.Format("/{0}/{1}/{2}?comp=range", config.accountName, config.shareName, "foo/foo_rest_api.txt");
             var urlForMacEvaluationInit = String.Format("/{0}/{1}/{2}", config.accountName, config.shareName, "foo/foo_rest_api.txt");
             var contentUrl = string.Empty;

@@ -39,7 +39,6 @@ namespace com.businesscentral
 
             #region GetSharedKeyLite
             var sb = new StringBuilder();
-            //eg: /app365azurefiles/to-increase/pippo?comp=list
             var urlForMacEvaluation = String.Format("/{0}/{1}/{2}/sample2.txt", config.accountName, config.shareName, config.workingFolder);
             var contentUrl = string.Empty;
             sb.AppendLine(_azurestorage.GetSharedKeyLiteDelete(config, urlForMacEvaluation, contentUrl));

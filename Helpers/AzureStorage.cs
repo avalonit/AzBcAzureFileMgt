@@ -83,6 +83,10 @@ namespace com.businesscentral
         {
             return GetSharedKeyLite(HttpMethod.Get, config, url, contentType, 0, string.Empty);
         }
+           public string GetSharedKeyLiteHead(ConnectorConfig config, string url, string contentType)
+        {
+            return GetSharedKeyLite(HttpMethod.Head, config, url, contentType, 0, string.Empty);
+        }
         public string GetSharedKeyLiteDelete(ConnectorConfig config, string url, string contentType)
         {
             return GetSharedKeyLite(HttpMethod.Delete, config, url, contentType, 0, string.Empty);

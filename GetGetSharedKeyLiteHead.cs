@@ -44,12 +44,17 @@ namespace com.businesscentral
             var urlForMacEvaluationGetFolderExist = String.Format("/{0}/{1}/{2}", config.accountName, config.shareName, config.workingFolder);
             var urlForMacEvaluationGetFolderDoesNotExist = String.Format("/{0}/{1}/{2}", config.accountName, config.shareName, "nofoo");
             var contentUrl = string.Empty;
+            sb.AppendLine("-----------------------------------------------------------------------------");
+            sb.AppendLine("FILE EXISTS");
             sb.AppendLine(_azurestorage.GetSharedKeyLiteHead(config, urlForMacEvaluationGetFileExist, contentUrl));
             sb.AppendLine("-----------------------------------------------------------------------------");
+            sb.AppendLine("FILE DOES NOT EXISTS");
             sb.AppendLine(_azurestorage.GetSharedKeyLiteHead(config, urlForMacEvaluationGetDontExist, contentUrl));
             sb.AppendLine("-----------------------------------------------------------------------------");
+            sb.AppendLine("FOLDER EXISTS");
             sb.AppendLine(_azurestorage.GetSharedKeyLiteHead(config, urlForMacEvaluationGetFolderExist, contentUrl));
             sb.AppendLine("-----------------------------------------------------------------------------");
+            sb.AppendLine("FOLDER DOES NOT EXISTS");
             sb.AppendLine(_azurestorage.GetSharedKeyLiteHead(config, urlForMacEvaluationGetFolderDoesNotExist, contentUrl));
 
             return new OkObjectResult(sb.ToString());

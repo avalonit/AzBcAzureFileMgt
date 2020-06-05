@@ -10,7 +10,7 @@ namespace com.businesscentral
         string GetSharedKeyLiteGet(ConnectorConfig config, string url, string contentType);
         string GetSharedKeyLiteHead(ConnectorConfig config, string url, string contentType);
         string GetSharedKeyLiteDelete(ConnectorConfig config, string url, string contentType);
-        string GetSharedKeyLitePut(ConnectorConfig config, string url, string contentType, int contentLength, string subType);
+        string GetSharedKeyLitePut(ConnectorConfig config, string url, string contentType, int contentLength, string subType, string fileSource);
         Task<string> GetFolderListAsync(ConnectorConfig config, string publicUrl, string macEvaluatedUrl);
         //string RestApiUpload(ConnectorConfig config);
 

@@ -41,9 +41,18 @@ namespace com.businesscentral
             var sb = new StringBuilder();
             var urlForMacEvaluationRange = String.Format("/{0}/{1}/{2}?comp=range", config.accountName, config.shareName, "foo/foo_rest_api.txt");
             var urlForMacEvaluationInit = String.Format("/{0}/{1}/{2}", config.accountName, config.shareName, "foo/foo_rest_api.txt");
+            var urlForMacCopyInit = String.Format("/{0}/{1}/{2}", config.accountName, config.shareName, "foo/copy_of_dyn3.jpg");
             var contentUrl = string.Empty;
-            sb.AppendLine(_azurestorage.GetSharedKeyLitePut(config, urlForMacEvaluationInit, contentUrl, 999, "init"));
-            sb.AppendLine(_azurestorage.GetSharedKeyLitePut(config, urlForMacEvaluationRange, contentUrl, 999, "range"));
+            sb.AppendLine("-----------------------------------------------------------------------------");
+            sb.AppendLine("FILE PUT");
+            sb.AppendLine(_azurestorage.GetSharedKeyLitePut(config, urlForMacEvaluationInit, contentUrl, 999, "init", string.Empty));
+            sb.AppendLine("-----------------------------------------------------------------------------");
+            sb.AppendLine("FILE PUT RANGE");
+            sb.AppendLine(_azurestorage.GetSharedKeyLitePut(config, urlForMacEvaluationRange, contentUrl, 999, "range", string.Empty));
+            sb.AppendLine("-----------------------------------------------------------------------------");
+            sb.AppendLine("FILE PUT COPY");
+            var fileName=string.Format("{0}/{1}/{2}",config.azurePublicUrl, "foo", "dyn3.jpg");
+            sb.AppendLine(_azurestorage.GetSharedKeyLitePut(config, urlForMacCopyInit, contentUrl, 0, "copyfile", fileName));
 
             return new OkObjectResult(sb.ToString());
             #endregion

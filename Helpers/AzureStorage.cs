@@ -8,7 +8,6 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Net.Http;
 using System.Linq;
-using System.Collections;
 using System.Collections.Specialized;
 using System.Web;
 
@@ -81,23 +80,23 @@ namespace com.businesscentral
 
         public string GetSharedKeyLiteGet(ConnectorConfig config, string url, string contentType)
         {
-            return GetSharedKeyLite(HttpMethod.Get, config, url, contentType, 0, string.Empty);
+            return GetSharedKeyLite(HttpMethod.Get, config, url, contentType, 0, string.Empty, string.Empty);
         }
-           public string GetSharedKeyLiteHead(ConnectorConfig config, string url, string contentType)
+        public string GetSharedKeyLiteHead(ConnectorConfig config, string url, string contentType)
         {
-            return GetSharedKeyLite(HttpMethod.Head, config, url, contentType, 0, string.Empty);
+            return GetSharedKeyLite(HttpMethod.Head, config, url, contentType, 0, string.Empty, string.Empty);
         }
         public string GetSharedKeyLiteDelete(ConnectorConfig config, string url, string contentType)
         {
-            return GetSharedKeyLite(HttpMethod.Delete, config, url, contentType, 0, string.Empty);
+            return GetSharedKeyLite(HttpMethod.Delete, config, url, contentType, 0, string.Empty, string.Empty);
         }
 
-        public string GetSharedKeyLitePut(ConnectorConfig config, string url, string contentType, int contentLength, string subType)
+        public string GetSharedKeyLitePut(ConnectorConfig config, string url, string contentType, int contentLength, string subType, string fileSource)
         {
-            return GetSharedKeyLite(HttpMethod.Put, config, url, contentType, contentLength, subType);
+            return GetSharedKeyLite(HttpMethod.Put, config, url, contentType, contentLength, subType, fileSource);
         }
 
-        public string GetSharedKeyLite(HttpMethod method, ConnectorConfig config, string url, string contentType, int contentLength, string subType)
+        public string GetSharedKeyLite(HttpMethod method, ConnectorConfig config, string url, string contentType, int contentLength, string subType, string fileSource)
         {
             var StorageAccountName = config.accountName;
             var StorageKey = config.accountKey;
@@ -121,6 +120,17 @@ namespace com.businesscentral
                             contentType,
                             string.Empty,
                             "x-ms-content-length:" + contentLength.ToString(),
+                            "x-ms-date:" + requestDateString,
+                            "x-ms-type:file",
+                            "x-ms-version:2017-11-09",
+                            url);
+                else if (subType.Equals("copyfile"))
+                    canonicalizedStringToBuild = String.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}\n{7}\n{8}",
+                            method.ToString(),
+                            String.Empty,
+                            contentType,
+                            string.Empty,
+                            "x-ms-copy-source:" + fileSource,
                             "x-ms-date:" + requestDateString,
                             "x-ms-type:file",
                             "x-ms-version:2017-11-09",
